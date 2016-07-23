@@ -23,6 +23,8 @@ set(src
   timer.cc
   image.h
   image_proc-inl.h
+  ctmf.h
+  ctmf.c
   stereo_lib.h
   stereo_lib.cc
   match_cost.h

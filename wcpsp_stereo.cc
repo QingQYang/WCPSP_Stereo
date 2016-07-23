@@ -10,6 +10,7 @@
 #include <png++/png.hpp>
 #include "timer.h"
 #include "image.h"
+#include "ctmf.h"
 #include "match_cost.h"
 #include "horiz_tree_cost_propagation.h"
 #include "stereo_lib.h"
@@ -57,19 +58,23 @@ int main(int argc, char *argv[]) {
     double sigma_r = atof(argv[7]);
     double p_smooth = atof(argv[8]);
 
-    // int channels = 3;
+    int channels = 3;
     Image<int> left_disp_image(width, height, 1);
     Image<CostType> left_cost_vol(width, height, disp_range);
     Image<CostType> right_cost_vol(width, height, disp_range);
     MatchCostGradientAndCensus mcgc;
     mcgc.compute(left_cost_vol, right_cost_vol, left, right);
 
-    // int row_step = width * channels;
-    // int radius = 2;
+    disp_range = 178;
+    left_cost_vol.resize_channels(disp_range);
+    right_cost_vol.resize_channels(disp_range);
+
+    int row_step = width * channels;
+    int radius = 2;
     ImageU8 smoothed_left(left);
     // smooth with median filter
-    // ctmf(left.data(), smoothed_left.data(), width, height, row_step, row_step,
-    //      radius, channels, width*height*channels);
+    ctmf(left.data(), smoothed_left.data(), width, height, row_step, row_step,
+         radius, channels, width*height*channels);
     Timer timer;
     timer.tic();
     HTreeCostPropagation<CostType> htcp_l(smoothed_left, left_cost_vol, sigma_r, p_smooth);
@@ -86,8 +91,8 @@ int main(int argc, char *argv[]) {
         speckle_filter(left_disp_image, 100, static_cast<int>(2*disp_factor));
         // stereo post-processing
         ImageU8 smoothed_right(right);
-        // ctmf(right.data(), smoothed_right.data(), width, height, row_step, row_step,
-        //      radius, channels, width*height*channels);
+        ctmf(right.data(), smoothed_right.data(), width, height, row_step, row_step,
+             radius, channels, width*height*channels);
 
         HTreeCostPropagation<CostType> htcp_r(smoothed_right, right_cost_vol,
                                               sigma_r, p_smooth);

@@ -1,5 +1,5 @@
 # WCPSP_Stereo
-## Weighted Cost Propagation with Smoothness Prior for fast stereo correspondence
+### Weighted Cost Propagation with Smoothness Prior for fast stereo correspondence
 
 WCPSP_Stereo is a fast stereo correspondence algorithm utilizing *weighted cost
 propagation with smoothness prior* on horizontal tree strucutres introduced in
@@ -14,3 +14,8 @@ Correspondence".
     1. create a folder 'mkdir build' and 'cd build'
     2. type 'cmake ..'
     3. type 'make'
+
+### Usage of the demo code
+
+### License
+WCPSP-Stereo is licensed under the The MIT "Expat" License.

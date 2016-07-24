@@ -6,6 +6,12 @@ propagation with smoothness prior* on horizontal tree strucutres introduced in
 our work "Local Smoothness Enforced Cost Volume Regularization for Fast Stereo
 Correspondence".
 
+Note: After the publication of the paper, we changed to the KITTI datasets.  The
+matching cost computing function is different as that is described in the paper.
+The code for cost computation is adapt from the code for the paper "Efficient
+Joint Segmentation, Occlusion Labeling" by Koichiro Yamaguchi et
+al.(http://ttic.uchicago.edu/~dmcallester/SPS/index.html).
+
 ### Building
 1. Prerequisites
     * [libpng](http://www.libpng.org/pub/png/libpng.html)

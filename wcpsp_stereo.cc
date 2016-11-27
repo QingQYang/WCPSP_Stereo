@@ -3,12 +3,11 @@
 
 // post-processing works for this method
 
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <chrono>               // c++11 timer functions
 #include <png++/png.hpp>
-#include "timer.h"
 #include "image.h"
 #include "ctmf.h"
 #include "match_cost.h"
@@ -21,8 +20,9 @@ typedef float CostType;
 
 int main(int argc, char *argv[]) {
     if (argc != 9) {
-        fprintf(stderr, "usage: %s left(png) right(png) output(png) disp_range "
-                "disp_factor with_post_processing sigma_r p_smooth\n", argv[0]);
+        std::cerr << "usage: " << argv[0] << " left(png) right(png) output(png)"
+            " disp_range disp_factor with_post_processing sigma_r p_smooth"
+                  << std::endl;
         return 1;
     }
     std::string left_name = argv[1];
@@ -75,16 +75,16 @@ int main(int argc, char *argv[]) {
     // smooth with median filter
     ctmf(left.data(), smoothed_left.data(), width, height, row_step, row_step,
          radius, channels, width*height*channels);
-    Timer timer;
-    timer.tic();
+    using namespace std::chrono;
+    auto t0 = high_resolution_clock::now();
     HTreeCostPropagation<CostType> htcp_l(smoothed_left, left_cost_vol, sigma_r, p_smooth);
     // aggregation
     htcp_l.cost_propagate_with_smooth_prior();
-    timer.toc();
-    double secs = timer.get_elapsed_time();
+    auto t_d = high_resolution_clock::now() - t0;
+    auto msec = duration_cast<milliseconds>(t_d).count();
     // compute millions of disparity estimation per second
-    printf("MDE/s, %.2lf,", width*height*disp_range/secs/1000/1000);
-    printf("runtime, %.6lf\n", secs);
+    std::cout << "MDE/s, " << width*height*disp_range/msec/1000.0 << std::endl;
+    std::cout << "runtime, " <<  msec << "(msecs)" << std::endl;
 
     disp_best_cost_with_interpolation(left_disp_image, left_cost_vol, disp_factor, true);
     if(with_post_processing) {

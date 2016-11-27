@@ -19,8 +19,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall -DNDEBUG")
 
 set(src
-  timer.h
-  timer.cc
   image.h
   image_proc-inl.h
   ctmf.h
